@@ -18,7 +18,6 @@ class User(models.Model):
     def __str__(self):
         return self.name 
 
-
 class PetType(models.Model):
     name = models.CharField(max_length = 20)
 
