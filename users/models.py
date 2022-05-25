@@ -11,14 +11,14 @@ class PetType(models.Model):
         return self.name 
 
 class User(TimeStampedModel):
-    name = models.CharField(max_length = 50)
-    email = models.CharField(max_length = 100, unique = True)
-    password = models.CharField(max_length = 200)
-    mobile_number = models.CharField(max_length=20)
-    address = models.CharField(max_length=200)
-    email_subscription = models.BooleanField() 
-    membership_point = models.PositiveIntegerField()
-    pet_type = models.ForeignKey(PetType, on_delete = models.CASCADE)
+    name               = models.CharField(max_length=50)
+    email              = models.CharField(max_length=100, unique=True)
+    password           = models.CharField(max_length=200)
+    mobile_number      = models.CharField(max_length=20, unique=True)
+    address            = models.CharField(max_length=200)
+    email_subscription = models.BooleanField()
+    membership_point   = models.PositiveIntegerField()
+    pet_type           = models.ForeignKey(PetType, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         db_table = 'users'

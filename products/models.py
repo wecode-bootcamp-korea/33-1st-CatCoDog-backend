@@ -4,19 +4,25 @@ from core.models import TimeStampedModel
 
 class Product(TimeStampedModel):
     name          = models.CharField(max_length=15)
-    description   = models.CharField(max_length=150)
-    thumbnail_url = models.URLField(max_length=300)
+    description   = models.TextField()
+    thumbnail_url = models.URLField(max_length=600)
     discount_rate = models.PositiveIntegerField()
 
     class Meta:
         db_table = 'products'
 
+    def __str__(self):
+        return self.name
+
 class Category(models.Model):
-    name    = models.CharField(max_length=50)
+    name    = models.CharField(max_length=50, unique=True)
     product = models.ManyToManyField('product', through='productcategory', related_name='category')
 
     class Meta:
         db_table='categories'
+
+    def __str__(self):
+        return self.name
 
 class ProductCategory(models.Model):
     product  = models.ForeignKey('product', on_delete=models.CASCADE)
@@ -26,7 +32,7 @@ class ProductCategory(models.Model):
         db_table = 'product_categories'
 
 class ProductImage(models.Model):
-    url       = models.URLField(max_length=300)
+    url       = models.URLField(max_length=600)
     product   = models.ForeignKey('product', on_delete=models.CASCADE, related_name='image_url')
 
     class Meta:
