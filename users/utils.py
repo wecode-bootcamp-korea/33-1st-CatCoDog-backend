@@ -15,7 +15,7 @@ def validate_email(email):
         raise ValidationError("INVALID_EMAIL")
 
 def validate_password(password):
-    REGEX_PASSWORD  = "^(?=.{8,16}$)(?=.*[a-z])(?=.*[0-9]).*$"
+    REGEX_PASSWORD  = "^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$"
 
     if not re.match(REGEX_PASSWORD, password):
         raise ValidationError("INVALID_PASSWORD")
