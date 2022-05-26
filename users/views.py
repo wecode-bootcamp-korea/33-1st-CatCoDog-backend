@@ -26,23 +26,23 @@ class SignUpView(View):
             validate_password(password)
             validate_mobile_number(mobile_number)
 
+            signup_point = 1000
             hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-        
-        except KeyError:
-            return JsonResponse({"message": "KEY_ERROR"}, status=400)
 
-        except json.JSONDecodeError:
-            return JsonResponse({"message": "JSON_DECODE_ERROR"}, status=400)
-
-        User.objects.create(
+            User.objects.create(
                 name               = name,
                 email              = email,
                 password           = hashed_password,
                 mobile_number      = mobile_number,
                 address            = address,
                 email_subscription = email_subscription,
-                membership_point   = 1000,
+                membership_point   = signup_point,
                 pet_type           = pet_type,
-        )
-        
-        return JsonResponse({"message": "SUCCESS"}, status=201)
+            )
+            return JsonResponse({"message": "SUCCESS"}, status=201)
+
+        except KeyError:
+            return JsonResponse({"message": "KEY_ERROR"}, status=400)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "JSON_DECODE_ERROR"}, status=400)
