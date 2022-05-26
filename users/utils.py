@@ -1,12 +1,12 @@
+import re
 from datetime import datetime
-import re, jwt
 
-from django.http import JsonResponse
-from users.models import User
-
-from django.conf import settings
-
+import jwt
+from django.http            import JsonResponse
+from django.conf            import settings
 from django.core.exceptions import ValidationError
+
+from users.models import User
 
 def validate_email(email):
     REGEX_EMAIL = '^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'

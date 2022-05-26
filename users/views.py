@@ -1,17 +1,20 @@
+import json
 from datetime import datetime, timedelta
-import json, bcrypt, jwt
 
+import bcrypt
+import jwt
 from django.http    import JsonResponse
 from django.views   import View
 from django.conf    import settings
 
 from users.models   import User, PetType
-from users.utils    import (validate_name,
-                            validate_email,
-                            validate_password,
-                            validate_mobile_number,
-                            login_decorator,
-                            )
+from users.utils    import (
+    validate_name,
+    validate_email,
+    validate_password,
+    validate_mobile_number,
+    login_decorator,
+)
 
 class SignUpView(View):
     def post(self, request):
