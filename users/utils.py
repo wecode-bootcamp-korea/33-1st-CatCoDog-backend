@@ -21,7 +21,7 @@ def validate_password(password):
         raise ValidationError("INVALID_PASSWORD")
 
 def validate_mobile_number(mobile_number):
-    REGEX_MOBILE = "\d{3}-\d{3,4}-\d{4}"
+    REGEX_MOBILE = "^\d{10,11}$"
     
     if not re.match(REGEX_MOBILE, mobile_number):
         raise ValidationError("INVALID_MOBILE_NUMBER")
