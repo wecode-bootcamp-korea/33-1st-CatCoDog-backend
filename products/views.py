@@ -8,9 +8,9 @@ class ProductListView(View):
     def get(self, request):
         category = request.GET.get('category', None)
         search   = request.GET.get('search', None)
-        sort     = request.GET.get('sort', 'created_at')
+        sort     = request.GET.get('sort', 'name')
         offset   = int(request.GET.get('offset', 0))
-        limit    = int(request.GET.get('limit', 8))
+        limit    = int(request.GET.get('limit', 6))
 
         q = Q()
 
