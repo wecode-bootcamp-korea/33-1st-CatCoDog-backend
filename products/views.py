@@ -25,8 +25,6 @@ class ProductListView(View):
         sort_dict = {
             "new"   : "created_at",
             "old"   : "-created_at",
-            "name"  : "name",
-            "-name" : "-name",
             "price" : "options__price",
             "-price": "-options__price",
             "review": "-review_count",
