@@ -48,9 +48,9 @@ class ProductListView(View):
                 "name"            : product.name,
                 "description"     : product.description,
                 "thumbnail_url"   : product.thumbnail_url,
-                "discount_rate"   : product.discount_rate,
                 "review_count"    : product.reviews.count(),
                 "price"           : product.options.first().price,
+                "discount_rate"   : product.discount_rate,
                 "discounted_price": product.options.first().price * (100 - product.discount_rate)/100
             } for product in products]
 
