@@ -2,7 +2,7 @@ from enum import Enum
 
 from django.http      import JsonResponse
 from django.views     import View
-from django.db.models import Q, Count, Sum, IntegerField, OuterRef, Subquery
+from django.db.models import Q, Count, Sum, OuterRef
 
 from products.models import Product
 
@@ -12,7 +12,6 @@ class ProductOption(Enum):
 
 class ProductListView(View):
     def get(self, request):
-
         category = request.GET.get('category', None)
         search   = request.GET.get('search', None)
         sort     = request.GET.get('sort', 'name')
@@ -39,16 +38,14 @@ class ProductListView(View):
             "review": "-review_count",
             "sales" : "-sales_sum",            
         }
-
         sort = sort_set.get(sort)
 
         review_count = Product.objects.annotate(review_count=Count('reviews')).filter(pk=OuterRef('pk'))
         sales_sum    = Product.objects.annotate(sales_sum=Sum('options__items__quantity')).filter(pk=OuterRef('pk'))
 
-        products     = Product.objects.filter(q).annotate\
-                            (review_count=Subquery(review_count.values('review_count'), output_field=IntegerField()),\
-                            sales_sum=Subquery(sales_sum.values('sales_sum'), output_field=IntegerField()))\
-                            .order_by(sort).distinct()[offset:offset+limit]
+        products = Product.objects.filter(q).prefetch_related('options', 'reviews').annotate\
+                (review_count=review_count.values('review_count'), sales_sum=sales_sum.values('sales_sum'))\
+                .order_by(sort).distinct()[offset:offset+limit]
 
         product_list = [{
             "product_id"      : product.id,
@@ -56,9 +53,9 @@ class ProductListView(View):
             "description"     : product.description,
             "thumbnail_url"   : product.thumbnail_url,
             "review_count"    : product.reviews.count(),
-            "price"           : product.options.first().price,
+            "price"           : format(int(product.options.all()[0].price), ',d'),
             "discount_rate"   : product.discount_rate,
-            "discounted_price": product.options.first().price * (100 - product.discount_rate)/100,
+            "discounted_price": format(int(product.options.all()[0].price * (100 - product.discount_rate)/100), ',d'),
         } for product in products]
 
         return JsonResponse({"data": product_list}, status=200)
