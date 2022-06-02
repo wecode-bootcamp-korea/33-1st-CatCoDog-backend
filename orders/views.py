@@ -76,7 +76,6 @@ class CartView(View):
             user                  = request.user
             product_option_id     = data['product_option_id']
             quantity              = data['quantity']
-            product_option_remove = data.get('product_option_remove', False)
             
             if not Cart.objects.filter(user=user, product_option_id=product_option_id).exists():
                 return JsonResponse({"message": "CART_NOT_EXIST"}, status=404)
@@ -84,9 +83,6 @@ class CartView(View):
             cart          = Cart.objects.get(user=user, product_option_id=product_option_id)
             cart.quantity = quantity
             cart.save()
-
-            if product_option_remove:
-                cart.delete()
 
             if cart.quantity <= 0:
                 return JsonResponse({"message": "PRODUCT_QUANTITY_ERROR"}, status=400)
@@ -104,10 +100,11 @@ class CartView(View):
 
     @login_decorator
     def delete(self, request):
-        cart = Cart.objects.filter(user=request.user)
+        cart_remove_list = request.GET.getlist('cart_id', None)
+        cart             = Cart.objects.filter(id__in=cart_remove_list, user=request.user)
 
         if not cart.exists():
             return JsonResponse({"message": "CART_NOT_EXIST"}, status=404)
         
         cart.delete()
-        return JsonResponse({"message": "SUCCESS"}, status=204)
+        return JsonResponse({"message": "CART_DELETED"}, status=204)
